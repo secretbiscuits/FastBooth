@@ -811,7 +811,49 @@ class UIController {
             }).join('');
             chartEl.innerHTML = barRows;
         }
-    }
+
+        // 上記の固定0:00起点ではなく、「最初の売上時刻」から30分区切りで再集計して表示
+        (function replotFromFirstSale() {
+            const dayStart = new Date(); dayStart.setHours(0, 0, 0, 0);
+            const dayEnd = new Date(dayStart); dayEnd.setDate(dayEnd.getDate() + 1);
+            const todays = (Array.isArray(this.data.sales) ? this.data.sales : [])
+                .map(s => ({ ...s, _d: new Date(s.date) }))
+                .filter(s => s._d >= dayStart && s._d < dayEnd)
+                .sort((a, b) => a._d - b._d);
+            if (todays.length === 0) return;
+            const first = todays[0]._d;
+            const last = todays[todays.length - 1]._d;
+            const slotMs = 30 * 60 * 1000;
+            const binCount = Math.max(1, Math.floor((last - first) / slotMs) + 1);
+            const bins = Array.from({ length: binCount }, () => 0);
+            todays.forEach(sale => {
+                const bin = Math.max(0, Math.min(binCount - 1, Math.floor((sale._d - first) / slotMs)));
+                const amount = (sale.items || []).reduce((sum, it) => {
+                    const product = this.data.products.find(p => p.id === it.productId);
+                    const price = typeof it.price === 'number' ? it.price : (product ? product.price : 0);
+                    return sum + price * (it.quantity || 0);
+                }, 0);
+                bins[bin] += amount;
+            });
+            const max = Math.max(...bins, 0);
+            const rows = bins.map((v, i) => {
+                const t = new Date(first.getTime() + i * slotMs);
+                const hh = String(t.getHours()).padStart(2, '0');
+                const mm = String(t.getMinutes()).padStart(2, '0');
+                const label = `${hh}:${mm}`;
+                const width = max > 0 ? Math.max(4, Math.round((v / max) * 100)) : 4;
+                return `
+                    <div class="flex items-center space-x-2">
+                        <div class="w-16 text-xs text-gray-600 dark:text-gray-300">${label}</div>
+                        <div class="flex-1 bg-gray-100 dark:bg-gray-700 rounded h-2">
+                            <div class="bg-blue-600 h-2 rounded" style="width:${width}%"></div>
+                        </div>
+                        <div class="w-24 text-right text-xs text-gray-700 dark:text-gray-300">¥${v.toLocaleString()}</div>
+                    </div>`;
+            }).join('');
+            chartEl.innerHTML = rows;
+        }).call(this);
+        }
 
     updateProductsView() {
         const tbody = document.getElementById('productsTableBody');
