@@ -1,10 +1,11 @@
-const CACHE_NAME = 'product-app-cache-v2';
+const CACHE_NAME = 'product-app-cache-v3';
 const CORE_ASSETS = [
   './',
   './index.html',
   './app.js',
   './logo.png',
   './1x/logo.png',
+  './setting.svg',
 ];
 
 self.addEventListener('install', (event) => {
@@ -27,7 +28,20 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Cache-first for same-origin GET
+  // Network-first for HTML/navigation to ensure latest markup
+  const isHTML = req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
+  if (req.method === 'GET' && isHTML) {
+    event.respondWith(
+      fetch(req).then((resp) => {
+        const clone = resp.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+        return resp;
+      }).catch(() => caches.match(req).then((c) => c || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Cache-first for same-origin GET (assets)
   if (req.method === 'GET' && url.origin === location.origin) {
     event.respondWith(
       caches.match(req).then((cached) => {
