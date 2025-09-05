@@ -1,8 +1,10 @@
-const CACHE_NAME = 'product-app-cache-v1';
+const CACHE_NAME = 'product-app-cache-v2';
 const CORE_ASSETS = [
   './',
   './index.html',
   './app.js',
+  './logo.png',
+  './1x/logo.png',
 ];
 
 self.addEventListener('install', (event) => {
@@ -54,4 +56,3 @@ self.addEventListener('fetch', (event) => {
     );
   }
 });
-
