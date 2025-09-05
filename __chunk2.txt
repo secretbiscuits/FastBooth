@@ -1,0 +1,31 @@
+                    if (s) s.value = '';
+                    if (so) so.value = 'default';
+                    this.updateProductsView();
+                    this.updateUI();
+                }
+            });
+            resetBtn._bound = true;
+        }
+
+        // Add product form bindings (one-time)
+        const addBtn = document.getElementById('addProductBtn');
+        if (addBtn && !addBtn._bound) {
+            addBtn.addEventListener('click', () => {
+                const nameEl = document.getElementById('newProductName');
+                const priceEl = document.getElementById('newProductPrice');
+                const stockEl = document.getElementById('newProductStock');
+                const categoryEl = document.getElementById('newProductCategory');
+                const imageUrlEl = document.getElementById('newProductImageUrl');
+                const name = (nameEl.value || '').trim();
+                const price = Math.max(0, parseInt(priceEl.value || '0', 10));
+                const stock = Math.max(0, parseInt(stockEl.value || '0', 10));
+                const category = (categoryEl.value || '').trim() || '未刁E��E;
+                const imageUrl = (imageUrlEl.value || '').trim();
+                if (!name) { alert('啁E��名を入力してください'); return; }
+                this.data.addProduct({ name, price, stock, category, imageUrl });
+                // clear
+                nameEl.value = '';
+                priceEl.value = '';
+                stockEl.value = '';
+                categoryEl.value = '';
+                imageUrlEl.value = '';

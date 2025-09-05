@@ -1,0 +1,9 @@
+966	        }
+967	
+968	        const exportBtn = document.getElementById('exportCsvBtn');
+969	        if (exportBtn && !exportBtn._bound) {
+970	            exportBtn.addEventListener('click', () => this.data.exportCSV());
+971	            exportBtn._bound = true;
+972	        }
+973	
+974	        const exportJsonBtn = document.getElementById('exportJsonBtn');

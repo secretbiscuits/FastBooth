@@ -1,0 +1,11 @@
+954	                    }
+955	                    if (!name) { alert('蝠・刀蜷阪ｒ蜈･蜉帙＠縺ｦ縺上□縺輔＞'); return; }
+956	                    this.data.updateProduct(id, { name, price, stock, category, imageUrl });
+957	                    this.editProductId = null;
+958	                }
+959	                if (action === 'delete') {
+960	                    if (confirm('縺薙・蝠・刀繧貞炎髯､縺励∪縺吶°・・)) this.data.deleteProduct(id);
+961	                }
+962	                this.updateProductsView();
+963	                this.updateUI();
+964	            });

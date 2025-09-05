@@ -1,0 +1,7 @@
+                        <input id="newProductPrice" type="number" min="0" step="1" placeholder="価格" class="border rounded px-3 py-2" />
+                        <input id="newProductStock" type="number" min="0" step="1" placeholder="在庫" class="border rounded px-3 py-2" />
+                        <input id="newProductCategory" type="text" placeholder="カチE��リ" class="border rounded px-3 py-2" />
+                        <input id="newProductImageUrl" type="url" placeholder="画像URL (任愁E" class="border rounded px-3 py-2 sm:col-span-2" />
+                    </div>
+                    <div class="flex justify-end">
+                        <button id="addProductBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">啁E��を追加</button>

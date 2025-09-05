@@ -1,0 +1,3 @@
+            if (toggleBtnMobile) toggleBtnMobile.textContent = 'ユーザー';
+            if (toggleBtnDesktop) toggleBtnDesktop.textContent = 'ユーザー画面へ戻めE;
+        } else {
